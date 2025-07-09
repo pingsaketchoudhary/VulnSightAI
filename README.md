@@ -22,7 +22,7 @@ This tool has been tested on Kali Linux. Follow the steps below to set it up.
 
 1. Clone the Repository:
 
-git clone https://github.com/your-username/VulnSightAI.git
+git clone https://github.com/pingsaketchoudhary/VulnSightAI.git
 cd VulnSightAI
 
 2. Install Required Tools:
