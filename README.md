@@ -1,21 +1,21 @@
 VulnSightAI: An AI-Powered Reconnaissance Toolkit 🛡️🤖
 VulnSightAI is an open-source, command-line framework designed for ethical hackers, bug bounty hunters, and security professionals. It automates the reconnaissance process and leverages Artificial Intelligence to suggest potential vulnerabilities (CVEs), accelerating security analysis.
 
-✨ Key Features
+Key Features
 Subdomain Enumeration: Leverages subfinder to discover subdomains.
 
 Port Scanning: Utilizes nmap to identify open ports and running services.
 
 Technology Detection: Employs whatweb to recognize the technology stack on the web server (e.g., Apache, PHP, WordPress).
 
-🧠 AI-Powered CVE Suggestions: Uses the Google Gemini AI to suggest potential vulnerabilities based on the detected technologies.
+ AI-Powered CVE Suggestions: Uses the Google Gemini AI to suggest potential vulnerabilities based on the detected technologies.
 
-📄 Professional Reporting: Exports all findings into a clean and professional HTML and PDF report.
+ Professional Reporting: Exports all findings into a clean and professional HTML and PDF report.
 
 Zero Cost: Built entirely on free and open-source tools.
 
-🚀 Demo
-(You can add a screenshot or a short GIF of the tool in action here. A good visual is highly impactful.)
+ Demo
+This tool is primarily designed for and tested on Debian-based Linux distributions like Kali Linux and Ubuntu. It is also compatible with other Linux distributions and macOS with minor adjustments to the installation process. For Windows users, it is recommended to run the tool inside a WSL2 environment."
 
 🛠️ Installation Guide (Kali Linux)
 This tool has been tested on Kali Linux. Follow the steps below to set it up.
@@ -80,7 +80,7 @@ Generate HTML and PDF Reports:
 
 python3 src/main_cli.py --target example.com --html output/report.html --pdf output/report.pdf
 
-📂 Project Structure
+ Project Structure
 /VulnSightAI
 │
 ├── /src
@@ -98,7 +98,7 @@ python3 src/main_cli.py --target example.com --html output/report.html --pdf out
 ├── LICENSE
 └── .gitignore
 
-📜 License
+ License
 This project is licensed under the MIT License.
 
 ⚠️ Disclaimer
