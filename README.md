@@ -23,6 +23,7 @@ This tool has been tested on Kali Linux. Follow the steps below to set it up.
 1. Clone the Repository:
 
 git clone https://github.com/pingsaketchoudhary/VulnSightAI.git
+
 cd VulnSightAI
 
 2. Install Required Tools:
@@ -35,17 +36,21 @@ go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
 
 # Set the path for Subfinder
 echo 'export PATH=$PATH:~/go/bin' >> ~/.bashrc
+
 source ~/.bashrc
 
 # Install wkhtmltopdf (for PDF reports)
 wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.bullseye_amd64.deb
+
 sudo dpkg -i wkhtmltox_0.12.6.1-2.bullseye_amd64.deb
+
 sudo apt-get install -f -y
 
 3. Set Up Python Environment and Dependencies:
 
 # Create a virtual environment
 python3 -m venv venv
+
 source venv/bin/activate
 
 # Install dependencies
@@ -65,7 +70,7 @@ Add the following content to the file and paste your key:
 
 Important: Do not forget to add config.json to your .gitignore file to keep your API key private.
 
-usage Usage
+ Usage
 Run the tool from the project's root directory.
 
 Basic Scan:
@@ -81,6 +86,7 @@ Generate HTML and PDF Reports:
 python3 src/main_cli.py --target example.com --html output/report.html --pdf output/report.pdf
 
  Project Structure
+ 
 /VulnSightAI
 │
 ├── /src
