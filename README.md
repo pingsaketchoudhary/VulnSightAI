@@ -1,54 +1,53 @@
-VulnSightAI: An AI-Powered Reconnaissance Toolkit 🛡️🤖
-VulnSightAI is an open-source, command-line framework designed for ethical hackers, bug bounty hunters, and security professionals. It automates the reconnaissance process and leverages Artificial Intelligence to suggest potential vulnerabilities (CVEs), accelerating security analysis.
+VulnSightAI: An AI-Powered Vulnerability Assessment Dashboard 
+
+VulnSightAI is a comprehensive, open-source framework that automates the initial stages of a penetration test. It integrates reconnaissance, AI-driven analysis, and real vulnerability scanning into a single, easy-to-use tool with both a CLI and an interactive Web Dashboard.
 
 ✨ Key Features
-Subdomain Enumeration: Leverages subfinder to discover subdomains.
 
-Port Scanning: Utilizes nmap to identify open ports and running services.
+Interactive Web Dashboard: A user-friendly interface built with Streamlit to run scans and visualize results.
 
-Technology Detection: Employs whatweb to recognize the technology stack on the web server (e.g., Apache, PHP, WordPress).
+Persistent Database: Uses SQLite to save all scan results, providing a complete history of past assessments.
 
-🧠 AI-Powered CVE Suggestions: Uses the Google Gemini AI to suggest potential vulnerabilities based on the detected technologies.
+Real Vulnerability Scanning: Leverages the power of Nuclei to run thousands of templates and confirm real-world vulnerabilities.
 
-📄 Professional Reporting: Exports all findings into a clean and professional HTML and PDF report.
+Automated Reconnaissance: Discovers subdomains (subfinder), scans for open ports (nmap), and identifies web technologies (whatweb).
 
-Zero Cost: Built entirely on free and open-source tools.
+🧠 AI-Powered CVE Suggestions: Uses the Google Gemini AI to suggest potential CVEs based on the detected technologies for further research.
+
+📄 Professional Reporting: Exports all findings into clean HTML and PDF reports, downloadable directly from the web dashboard.
 
 🚀 Demo
-(You can add a screenshot or a short GIF of the tool in action here. A good visual is highly impactful.)
+
+Web Dashboard Interface:
+(A screenshot of your web app showing the Nuclei findings and scan history would be perfect here)
 
 🛠️ Installation Guide (Kali Linux)
-This tool has been tested on Kali Linux. Follow the steps below to set it up.
+This tool is designed for Debian-based systems like Kali Linux.
 
 1. Clone the Repository:
 
-git clone https://github.com/your-username/VulnSightAI.git
+git clone https://github.com/pingsaketchoudhary/VulnSightAI.git
 cd VulnSightAI
 
 2. Install Required Tools:
 
-# Install Go (for Subfinder)
+# Install Go, Nuclei, Subfinder, and other dependencies
 sudo apt update && sudo apt install golang-go -y
-
-# Install Subfinder
 go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-
-# Set the path for Subfinder
+go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
 echo 'export PATH=$PATH:~/go/bin' >> ~/.bashrc
 source ~/.bashrc
+nuclei -update-templates
 
-# Install wkhtmltopdf (for PDF reports)
+# Install wkhtmltopdf for PDF reports
 wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.bullseye_amd64.deb
 sudo dpkg -i wkhtmltox_0.12.6.1-2.bullseye_amd64.deb
 sudo apt-get install -f -y
 
-3. Set Up Python Environment and Dependencies:
+3. Set Up Python Environment:
 
-# Create a virtual environment
 python3 -m venv venv
 source venv/bin/activate
-
-# Install dependencies
 pip install -r requirements.txt
 
 4. Set Up API Key:
@@ -57,28 +56,23 @@ Generate a free API key from Google AI Studio.
 
 Create a file named config.json in the project's root folder.
 
-Add the following content to the file and paste your key:
+Add the following content and paste your key:
 
 {
   "GEMINI_API_KEY": "PASTE_YOUR_API_KEY_HERE"
 }
 
-Important: Do not forget to add config.json to your .gitignore file to keep your API key private.
-
 usage Usage
-Run the tool from the project's root directory.
 
-Basic Scan:
+Running the Web Dashboard (Recommended)
+streamlit run web/app.py
 
-python3 src/main_cli.py --target example.com
+Open your browser and navigate to the local URL provided by Streamlit.
 
-Save JSON Output:
+Running the CLI Tool
+# Basic scan with PDF report
+python3 src/main_cli.py --target example.com --pdf output/report.pdf
 
-python3 src/main_cli.py --target example.com --output-json output/results.json
-
-Generate HTML and PDF Reports:
-
-python3 src/main_cli.py --target example.com --html output/report.html --pdf output/report.pdf
 
 📂 Project Structure
 /VulnSightAI

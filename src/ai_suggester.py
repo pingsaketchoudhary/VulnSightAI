@@ -3,7 +3,7 @@
 import os
 import requests
 import json
-import time # Retry ke liye time module import karein
+import time 
 
 def print_status(message):
     """Console par status message print karta hai."""
@@ -68,13 +68,13 @@ def get_cve_suggestions(technologies):
         "contents": [{"parts": [{"text": prompt}]}]
     }
 
-    # UPDATE: Retry logic add karein
+    
     max_retries = 3
     for attempt in range(max_retries):
         try:
             response = requests.post(api_url, headers=headers, json=payload, timeout=60)
             
-            # Agar 5xx error (server problem) hai, to retry karein
+            
             if 500 <= response.status_code < 600:
                 print_error(f"Server error (Status {response.status_code}). {attempt + 1}/{max_retries} koshish. 5 second me dobara try kiya jayega...")
                 time.sleep(5) # 5 second intezaar karein
@@ -88,14 +88,14 @@ def get_cve_suggestions(technologies):
             ai_response_text = content_part.get('text', "AI se koi valid response nahi mila.")
             
             print_status("AI se suggestions mil gaye.")
-            return ai_response_text # Safal hone par response return karein aur loop se bahar aayein
+            return ai_response_text 
 
         except requests.exceptions.RequestException as e:
             print_error(f"Attempt {attempt + 1}/{max_retries}: AI API se connect hone me truti hui: {e}")
             if attempt < max_retries - 1:
                 time.sleep(5)
             else:
-                return f"AI API Error: {e}" # Aakhri koshish ke baad error return karein
+                return f"AI API Error: {e}" 
     
     return "AI API se connect hone me vifal, saari koshishein fail huin."
 

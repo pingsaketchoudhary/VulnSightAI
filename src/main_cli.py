@@ -2,7 +2,7 @@
 
 import argparse
 import json
-import os # Naya import, directory operations ke liye
+import os 
 from recon_engine import run_all_scans
 from report_generator import generate_html_report, save_pdf_report
 
@@ -11,10 +11,10 @@ def ensure_dir(file_path):
     Sunishchit karta hai ki file save karne ke liye directory maujood hai.
     Agar directory nahi hai, to use bana deta hai.
     """
-    # file_path se directory ka naam nikalta hai (e.g., 'output/report.pdf' -> 'output')
+    
     directory = os.path.dirname(file_path)
     
-    # Check karta hai ki directory ka naam hai aur woh maujood nahi hai
+    
     if directory and not os.path.exists(directory):
         print(f"[+] Directory '{directory}' maujood nahi hai, banayi ja rahi hai...")
         os.makedirs(directory)
@@ -41,7 +41,7 @@ def main():
     print("="*55)
     
     if args.output_json:
-        ensure_dir(args.output_json) # UPDATE: Directory check karein
+        ensure_dir(args.output_json) 
         print(f"\n[+] Scan ke nateeje ko '{args.output_json}' file me save kiya ja raha hai...")
         try:
             with open(args.output_json, 'w') as f:
@@ -54,7 +54,7 @@ def main():
         html_report = generate_html_report(scan_results)
         
         if args.html:
-            ensure_dir(args.html) # UPDATE: Directory check karein
+            ensure_dir(args.html) 
             print(f"\n[+] HTML report ko '{args.html}' me save kiya ja raha hai...")
             try:
                 with open(args.html, 'w') as f:
@@ -64,7 +64,7 @@ def main():
                 print(f"[!] ERROR: HTML file save karne me truti hui: {e}")
 
         if args.pdf:
-            ensure_dir(args.pdf) # UPDATE: Directory check karein
+            ensure_dir(args.pdf) 
             print(f"\n[+] PDF report ko '{args.pdf}' me save kiya ja raha hai...")
             save_pdf_report(html_report, args.pdf)
 
