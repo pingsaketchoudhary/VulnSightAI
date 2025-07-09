@@ -34,3 +34,8 @@ env/
 .env/
 ENV/
 config.json
+# output folder ko ignore karo
+echo "output/" >> .gitignore
+
+# Saari .json files ko ignore karo
+echo "*.json" >> .gitignore
