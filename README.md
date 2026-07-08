@@ -1,7 +1,7 @@
-# 🛡️ VulnSightAI v2.0.0 (Military Grade)
+# 🛡️ VulnSightAI v2.0.1 (Military Grade)
 > **Next-Generation Autonomous Reconnaissance, Threat Profiling, & AI-Driven Vulnerability Insights**
 
-[![Version](https://img.shields.io/badge/Version-2.0.0-blueviolet?style=for-the-badge&logo=git)](https://github.com/pingsaketchoudhary/VulnSightAI)
+[![Version](https://img.shields.io/badge/Version-2.0.1-blueviolet?style=for-the-badge&logo=git)](https://github.com/pingsaketchoudhary/VulnSightAI)
 [![Go Backend](https://img.shields.io/badge/Backend-Go%201.21-00ADD8?style=for-the-badge&logo=go)](https://golang.org)
 [![React Frontend](https://img.shields.io/badge/Frontend-Next.js%20React-black?style=for-the-badge&logo=nextdotjs)](https://nextjs.org)
 [![License](https://img.shields.io/badge/License-MIT-red?style=for-the-badge)](LICENSE)
@@ -10,7 +10,7 @@
 
 ## ☣️ System Overview
 
-**VulnSightAI v2.0.0** is an enterprise-grade threat discovery and vulnerability correlation engine. Completely rewritten from the legacy Python/Streamlit codebase, the framework now harnesses a **high-concurrency Go Engine** and a **React/Next.js Matrix Dashboard** to deliver sub-second passive recon, native network banner mapping, secret leak checks, and automated AI security mitigations.
+**VulnSightAI v2.0.1** is an enterprise-grade threat discovery and vulnerability correlation engine. Completely rewritten from the legacy Python/Streamlit codebase, the framework now harnesses a **high-concurrency Go Engine** and a **React/Next.js Matrix Dashboard** to deliver sub-second passive recon, native network banner mapping, secret leak checks, and automated AI security mitigations.
 
 ```
                   ┌──────────────────────────────┐
@@ -44,7 +44,7 @@
 
 ---
 
-## ⚡ Key Features (v2.0.0 Premium Stack)
+## ⚡ Key Features (v2.0.1 Premium Stack)
 
 * **🚀 High-Concurrency Go Scanner**: Scans open ports, performs raw TCP handshakes, sends active protocol probes (HTTP/SMTP/SSH/Redis PINGs), and matches banners against Nmap signatures using a **Consensus Merger** to prevent discrepancy and service spoofing.
 * **📡 CISA KEV & Zero-Day Threat Feed Aggregator**: Dynamically pulls and parses CISA's official **Known Exploited Vulnerabilities** catalog to flag vulnerabilities currently targeted by threat actors in the wild. Supports full offline fallback mode to eliminate DNS/HTTP leaks during covert operations.
@@ -56,6 +56,9 @@
 ---
 
 ## 🛠️ Step-by-Step Installation Protocols
+
+> [!IMPORTANT]
+> **Single-Binary Engine Deployment:** Starting with **v2.0.1**, the React/Next.js frontend assets are fully compiled and embedded directly inside the Go backend server binary. You **no longer need Node.js, NPM, or `node_modules`** to run the graphical web dashboard in production! Running the Go server binary starts BOTH the backend API and the frontend dashboard on port `8080` out-of-the-box.
 
 Please select your deployment platform below for detailed setup procedures.
 
@@ -100,7 +103,7 @@ chmod +x start.sh
 * **Install via DEB package (Recommended):**
   Download the latest debian release package and execute:
   ```bash
-  sudo dpkg -i vulnsight-cli_2.0.0_amd64.deb
+  sudo dpkg -i vulnsight-cli_2.0.1_amd64.deb
   vulnsight-cli scan scanme.nmap.org
   ```
 
@@ -249,7 +252,7 @@ We publish compiled CLI release packages for multiple platforms. You can downloa
 ### 🐧 Debian / Ubuntu / Kali Linux (Installer Package)
 Install using the native package manager:
 ```bash
-sudo dpkg -i vulnsight-cli_2.0.0_amd64.deb
+sudo dpkg -i vulnsight-cli_2.0.1_amd64.deb
 vulnsight-cli scan scanme.nmap.org
 ```
 
