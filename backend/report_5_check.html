@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VulnSightAI Security Assessment Report - abhedyadynamics.com</title>
+    <style>
+        :root {
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #0f172a;
+            color: #ffffff;
+            padding: 30px 40px;
+            border-bottom: 4px solid var(--primary);
+            position: relative;
+        }
+
+        .header-content {
+            max-w: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-branding h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-branding p {
+            margin: 5px 0 0 0;
+            color: #94a3b8;
+            font-size: 13px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .classification-tag {
+            background-color: #ef4444;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .container {
+            max-w: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 25px;
+        }
+
+        .btn-print {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+            transition: all 0.2s;
+        }
+
+        .btn-print:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .grid-stats {
+            display: grid;
+            grid-template-cols: 1fr;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        @media(min-width: 768px) {
+            .grid-stats {
+                grid-template-cols: repeat(4, 1fr);
+            }
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .posture-badge {
+            display: inline-block;
+            font-size: 18px;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 6px;
+            text-align: center;
+            width: fit-content;
+        }
+
+        .section-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 35px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-card h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 18px;
+            font-weight: 800;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Vulnerabilities details cards styling */
+        .vuln-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            background: var(--bg-body);
+        }
+
+        .vuln-card[open] {
+            border-color: #cbd5e1;
+        }
+
+        .vuln-card summary {
+            padding: 16px 20px;
+            font-weight: 700;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            outline: none;
+        }
+
+        .vuln-card summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .vuln-title {
+            flex-grow: 1;
+            font-size: 14px;
+        }
+
+        .vuln-arrow {
+            font-size: 10px;
+            color: var(--text-muted);
+            transition: transform 0.2s;
+        }
+
+        .vuln-card[open] summary .vuln-arrow {
+            transform: rotate(180deg);
+        }
+
+        .vuln-details {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-card);
+            font-size: 14px;
+        }
+
+        .vuln-details p {
+            margin: 0 0 10px 0;
+        }
+
+        .vuln-details p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Badges */
+        .badge {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-critical { background: #fef2f2; color: #991b1b; border: 1px solid #fee2e2; }
+        .badge-high { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
+        .badge-medium { background: #fef9c3; color: #a16207; border: 1px solid #fef08a; }
+        .badge-low { background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+        .badge-info { background: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; }
+
+        .border-critical { border-left: 5px solid #ef4444; }
+        .border-high { border-left: 5px solid #f97316; }
+        .border-medium { border-left: 5px solid #eab308; }
+        .border-low { border-left: 5px solid #3b82f6; }
+        .border-info { border-left: 5px solid #6b7280; }
+
+        /* Secure template card */
+        .secure-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .secure-card .icon {
+            font-size: 32px;
+        }
+
+        .secure-card h3 {
+            margin: 0;
+            color: #166534;
+            font-size: 16px;
+        }
+
+        .secure-card p {
+            margin: 5px 0 0 0;
+            color: #14532d;
+            font-size: 13px;
+        }
+
+        /* Nmap Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            border-bottom: 2px solid var(--border-color);
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .state-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .state-indicator::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .state-indicator.online { color: #166534; }
+        .state-indicator.online::before { background-color: #22c55e; }
+
+        .font-mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
+        .text-muted {
+            color: var(--text-muted);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* Tech badges container */
+        .badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tech-badge {
+            background-color: var(--bg-body);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: ui-monospace, SFMono-Regular, monospace;
+        }
+
+        .bullet-list {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+
+        .bullet-list li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .accent-link {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .accent-link:hover {
+            text-decoration: underline;
+        }
+
+        /* PDF Printing Customizations */
+        @media print {
+            body {
+                background-color: white;
+                font-size: 12px;
+            }
+
+            .container {
+                max-width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            .action-bar {
+                display: none;
+            }
+
+            .section-card {
+                box-shadow: none;
+                border: 1px solid #cbd5e1;
+                page-break-inside: avoid;
+                margin-bottom: 20px;
+                padding: 20px;
+            }
+
+            .vuln-card {
+                page-break-inside: avoid;
+            }
+
+            .vuln-details {
+                display: block !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="header-branding">
+                <h1>🛡️ VULNSIGHTAI REPORT</h1>
+                <p>Security Vulnerability Assessment Telemetry</p>
+            </div>
+            <div class="classification-tag">CONFIDENTIAL</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Action Bar -->
+        <div class="action-bar">
+            <button onclick="window.print()" class="btn-print">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                    <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
+                </svg>
+                Save as PDF
+            </button>
+        </div>
+
+        <!-- Dashboard Stats Grid -->
+        <div class="grid-stats">
+            <div class="stat-card">
+                <span class="stat-label">Security Posture</span>
+                <span class="posture-badge" style="background-color: #6b728020; color: #6b7280">INFO</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Target Asset</span>
+                <span class="stat-value" style="font-size: 15px; font-family: monospace; word-break: break-all;">abhedyadynamics.com</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Scan Timestamp</span>
+                <span class="stat-value" style="font-size: 14px;">2026-07-01 21:02:56</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Vulnerabilities Detected</span>
+                <span class="stat-value" style="color: #6b7280">10</span>
+            </div>
+        </div>
+
+        <!-- AI Mitigation Suggestions -->
+        <div class="section-card">
+            <h2>🤖 AI Security Assessment & Recommendations</h2>
+            <div class="ai-content">
+                <p>Based upon your given information about discovered DNS related issues (NS Record Detection), you can create following summaries for each issue :</p><p>1) NS record detection in abhedyadynamics.com - Hostname delegation to multiple name servers, severity is INFO and remediation steps are provided as per the description from CVE-2007–4589 (https://www.cvedetails.com/cve/CVE-2007-4589)</p><p>```markdown</p><p>Issue: NS Record Detection 1 - DNS issue detected, delegation of subdomain to multiple name servers might be an indication that this could possibly lead into DDoS attacks if not properly handled. Proper remediation steps would include checking the configuration and updating any misconfigured services accordingly or setting up proper firewall rules/rules for outbound traffic on ports 80 (http) & 443(https).</p><p>```</p><p>2) NS record detection in abhedyadynamics.com - Another DNS issue, server might not be returning the expected nameserver even though it should have been configured correctly and returned all available servers from a centralized name service provider like 'ns1.dns-parking.com' & ‘ns2.dns-parking.com'. Proper remediation steps would include making sure your network configuration is correct, updated the DNS settings of each device in use and ensure all necessary services are up to date with accurate nameservers from a reliable source like 'digitalocean', or similar providers if you're using public IP addresses for dns resolution.</p><p>```markdown</p><p>3) TLS Version Detect - Based on the information provided, there might be multiple versions of SSL/TLS enabled in your network (tls12 & tls13), severity is INFO and remediation steps are shared from description as per CVE-XXXX.</p><p>```</p><p>Please note that these summaries should ideally follow best practices for vulnerability management to ensure the long term sustaining of security posture, including not overly complicating system configuration changes with unnecessary additions or removals which could potentially be exploited by attackers if compromised due to misconfigurations.</p><p>Also remember that your network must have a comprehensive set up and tested environment before doing such activities in production systems as it is impossible for them to provide the exact steps without specific conditions met (like proper security configuration, dns setting etc.). You should also consider getting professional help if you don't understand what needs remediation.</p>
+            </div>
+        </div>
+
+        <!-- Vulnerabilities List -->
+        <div class="section-card">
+            <h2>🔍 Threat & Vulnerability Index</h2>
+            
+				<details class="vuln-card border-info">
+					<summary>
+						<span class="badge badge-info">INFO</span>
+						<span class="vuln-title">Cookies without HttpOnly attribute - Detect</span>
+						<span class="vuln-arrow">▼</span>
+					</summary>
+					<div class="vuln-details">
+						<p><strong>Description:</strong> Checks whether cookies in the HTTP response contain the HttpOnly attribute. If the HttpOnly flag is set, it means that the cookie is HTTP-only
+</p>
+						<p><strong>Target URL:</strong> <a href="abhedyadynamics.com" target="_blank" class="accent-link">abhedyadynamics.com</a></p>
+					</div>
+				</details>
+				<details class="vuln-card border-info">
+					<summary>
+						<span class="badge badge-info">INFO</span>
+						<span class="vuln-title">SPF Record - Detection</span>
+						<span class="vuln-arrow">▼</span>
+					</summary>
+					<div class="vuln-details">
+						<p><strong>Description:</strong> An SPF TXT record was detected
+</p>
+						<p><strong>Target URL:</strong> <a href="abhedyadynamics.com" target="_blank" class="accent-link">abhedyadynamics.com</a></p>
+					</div>
+				</details>
+				<details class="vuln-card border-info">
+					<summary>
+						<span class="badge badge-info">INFO</span>
+						<span class="vuln-title">DNS TXT Record Detected</span>
+						<span class="vuln-arrow">▼</span>
+					</summary>
+					<div class="vuln-details">
+						<p><strong>Description:</strong> A DNS TXT record was detected. The TXT record lets a domain admin leave notes on a DNS server.</p>
+						<p><strong>Target URL:</strong> <a href="abhedyadynamics.com" target="_blank" class="accent-link">abhedyadynamics.com</a></p>
+					</div>
+				</details>
+				<details class="vuln-card border-info">
+					<summary>
+						<span class="badge badge-info">INFO</span>
+						<span class="vuln-title">CAA Record</span>
+						<span class="vuln-arrow">▼</span>
+					</summary>
+					<div class="vuln-details">
+						<p><strong>Description:</strong> A CAA record was discovered. A CAA record is used to specify which certificate authorities (CAs) are allowed to issue certificates for a domain.</p>
+						<p><strong>Target URL:</strong> <a href="abhedyadynamics.com" target="_blank" class="accent-link">abhedyadynamics.com</a></p>
+					</div>
+				</details>
+				<details class="vuln-card border-info">
+					<summary>
+						<span class="badge badge-info">INFO</span>
+						<span class="vuln-title">AAAA Record - IPv6 Detection</span>
+						<span class="vuln-arrow">▼</span>
+					</summary>
+					<div class="vuln-details">
+						<p><strong>Description:</strong> An AAAA record was detected. AAAA records are used to map domain names to IPv6 addresses.
+</p>
+						<p><strong>Target URL:</strong> <a href="abhedyadynamics.com" target="_blank" class="accent-link">abhedyadynamics.com</a></p>
+					</div>
+				</details>
+				<details class="vuln-card border-info">
+					<summary>
+						<span class="badge badge-info">INFO</span>
+						<span class="vuln-title">DNS DMARC - Detect</span>
+						<span class="vuln-arrow">▼</span>
+					</summary>
+					<div class="vuln-details">
+						<p><strong>Description:</strong> DNS DMARC information was detected.
+</p>
+						<p><strong>Target URL:</strong> <a href="_dmarc.abhedyadynamics.com" target="_blank" class="accent-link">_dmarc.abhedyadynamics.com</a></p>
+					</div>
+				</details>
+				<details class="vuln-card border-info">
+					<summary>
+						<span class="badge badge-info">INFO</span>
+						<span class="vuln-title">MX Record Detection</span>
+						<span class="vuln-arrow">▼</span>
+					</summary>
+					<div class="vuln-details">
+						<p><strong>Description:</strong> An MX record was detected. MX records direct emails to a mail exchange server.</p>
+						<p><strong>Target URL:</strong> <a href="abhedyadynamics.com" target="_blank" class="accent-link">abhedyadynamics.com</a></p>
+					</div>
+				</details>
+				<details class="vuln-card border-info">
+					<summary>
+						<span class="badge badge-info">INFO</span>
+						<span class="vuln-title">NS Record Detection</span>
+						<span class="vuln-arrow">▼</span>
+					</summary>
+					<div class="vuln-details">
+						<p><strong>Description:</strong> An NS record was detected. An NS record delegates a subdomain to a set of name servers.</p>
+						<p><strong>Target URL:</strong> <a href="abhedyadynamics.com" target="_blank" class="accent-link">abhedyadynamics.com</a></p>
+					</div>
+				</details>
+				<details class="vuln-card border-info">
+					<summary>
+						<span class="badge badge-info">INFO</span>
+						<span class="vuln-title">TLS Version - Detect</span>
+						<span class="vuln-arrow">▼</span>
+					</summary>
+					<div class="vuln-details">
+						<p><strong>Description:</strong> TLS version detection is a security process used to determine the version of the Transport Layer Security (TLS) protocol used by a computer or server.
+It is important to detect the TLS version in order to ensure secure communication between two computers or servers.
+</p>
+						<p><strong>Target URL:</strong> <a href="abhedyadynamics.com:443" target="_blank" class="accent-link">abhedyadynamics.com:443</a></p>
+					</div>
+				</details>
+				<details class="vuln-card border-info">
+					<summary>
+						<span class="badge badge-info">INFO</span>
+						<span class="vuln-title">TLS Version - Detect</span>
+						<span class="vuln-arrow">▼</span>
+					</summary>
+					<div class="vuln-details">
+						<p><strong>Description:</strong> TLS version detection is a security process used to determine the version of the Transport Layer Security (TLS) protocol used by a computer or server.
+It is important to detect the TLS version in order to ensure secure communication between two computers or servers.
+</p>
+						<p><strong>Target URL:</strong> <a href="abhedyadynamics.com:443" target="_blank" class="accent-link">abhedyadynamics.com:443</a></p>
+					</div>
+				</details>
+        </div>
+
+        <!-- Nmap Port Scan -->
+        <div class="section-card">
+            <h2>🔌 Network Port Footprint</h2>
+            <table style="margin-top: 15px;">
+                <thead>
+                    <tr>
+                        <th>Port / Protocol</th>
+                        <th>State</th>
+                        <th>Service</th>
+                        <th>Software Version</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+			<tr>
+				<td><strong>21/tcp</strong></td>
+				<td><span class="state-indicator online">open</span></td>
+				<td>ftp</td>
+				<td class="text-muted font-mono">ProFTPD or KnFTPD</td>
+			</tr>
+			<tr>
+				<td><strong>80/tcp</strong></td>
+				<td><span class="state-indicator online">open</span></td>
+				<td>http</td>
+				<td class="text-muted font-mono">LiteSpeed httpd</td>
+			</tr>
+			<tr>
+				<td><strong>443/tcp</strong></td>
+				<td><span class="state-indicator online">open</span></td>
+				<td>ssl/http</td>
+				<td class="text-muted font-mono">LiteSpeed httpd</td>
+			</tr>
+			<tr>
+				<td><strong>2121/tcp</strong></td>
+				<td><span class="state-indicator online">closed</span></td>
+				<td>ccproxy-ftp</td>
+				<td class="text-muted font-mono"></td>
+			</tr>
+			<tr>
+				<td><strong>3306/tcp</strong></td>
+				<td><span class="state-indicator online">open</span></td>
+				<td>mysql?</td>
+				<td class="text-muted font-mono"></td>
+			</tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Subdomains -->
+        <div class="section-card">
+            <h2>🌐 Identified Subdomain Namespace</h2>
+            <div class='badge-container'><span class='tech-badge'>www.abhedyadynamics.com</span></div>
+        </div>
+
+        <!-- Technology Badges -->
+        <div class="section-card">
+            <h2>💻 Technology & Framework Profiling</h2>
+            <p class='no-data'>No technology signatures identified.</p>
+        </div>
+    </div>
+</body>
+</html>

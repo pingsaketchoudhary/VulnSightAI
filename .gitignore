@@ -1,0 +1,57 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+.venv/
+env/
+.env/
+ENV/
+config.json
+
+echo "output/" >> .gitignore
+echo "*.json" >> .gitignore
+echo "*.db" >> .gitignore
+echo "*.db-journal" >> .gitignore
+output/
+*.json
+*.db
+*.db-journal
+
+# Frontend exclusions
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Backend binaries
+backend/vulnsight_bin
+backend/test_bin
+backend/main
+backend/backend.log
+backend/build/
