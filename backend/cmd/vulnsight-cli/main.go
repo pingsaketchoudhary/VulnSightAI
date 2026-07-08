@@ -173,35 +173,69 @@ func main() {
 }
 
 func printWelcomeBanner() {
-	// Snake ASCII art in green, VulnSight in cyan/red, frame in dark grey
-	snakeColor := "\033[1;32m" // Bright Green
-	textColor := "\033[1;36m"  // Cyan
-	accColor := "\033[1;31m"   // Bright Red
-	grayColor := "\033[1;30m"  // Dark Gray
-	reset := "\033[0m"
+	colorReset := "\033[0m"
+	colorRed := "\033[1;31m"
+	colorCyan := "\033[1;36m"
+	colorYellow := "\033[1;33m"
+	colorGreen := "\033[1;32m"
 
-	// Define banner lines
-	lines := []string{
-		grayColor + " 💀 [BLACKHAT MATRIX RECON ENGINE ACTIVE] 💀" + reset,
-		snakeColor + "        .---.  .---.    " + textColor + " _     _  _  _       ____  _       _     _   " + reset,
-		snakeColor + "       /     \\/     \\   " + textColor + "| |   | || || |     / ___|(_) __ _| |__ | |_ " + reset,
-		snakeColor + "      |  /\\   /\\   /|   " + textColor + "| |   | || || |     \\___ \\| |/ _` | '_ \\| __|" + reset,
-		snakeColor + "      |  \\ \\_/ /  / |   " + textColor + "| |___| || || |___   ___) | | (_| | | | | |_ " + reset,
-		snakeColor + "       \\  \\   /  /  /   " + textColor + "|_____|_||_||_____| |____/|_|\\__, |_| |_|\\__|" + reset,
-		snakeColor + "        \\  \\_/  /  /    " + grayColor + "                             |___/           " + reset,
-		snakeColor + "         \\     /  /     " + accColor + "  ==[ VulnSightAI v2.0.1 - Red Team Edition ]==" + reset,
-		snakeColor + "          \\___/  /      " + grayColor + "  ⚡ Powered by hackwithsaket                 " + reset,
-		snakeColor + "              \\_/       " + reset,
-		grayColor + " ⚡========================================================================⚡" + reset,
-	}
+	// 1. Symmetrical Cyber Dragon Skull logo in Red/Cyan/Yellow
+	fmt.Print(colorRed)
+	fmt.Println(`                     / \__   __/ \`)
+	time.Sleep(20 * time.Millisecond)
+	fmt.Println(`                    /   _ \_/ _   \`)
+	time.Sleep(20 * time.Millisecond)
+	fmt.Println(`                   /   / \   / \   \`)
+	time.Sleep(20 * time.Millisecond)
+	fmt.Println(`                  /   /   \_/   \   \`)
+	time.Sleep(20 * time.Millisecond)
+	fmt.Print(`                 /   /  `)
+	fmt.Print(colorCyan + `(o) (o)`)
+	fmt.Print(colorRed)
+	fmt.Println(`  \   \`)
+	time.Sleep(20 * time.Millisecond)
+	fmt.Print(`                /   /    `)
+	fmt.Print(colorYellow + `\___/`)
+	fmt.Print(colorRed)
+	fmt.Println(`    \   \`)
+	time.Sleep(20 * time.Millisecond)
+	fmt.Print(`               /    \_   `)
+	fmt.Print(colorYellow + `/ ^ \`)
+	fmt.Print(colorRed)
+	fmt.Println(`   _/    \`)
+	time.Sleep(20 * time.Millisecond)
+	fmt.Print(`              /       \  `)
+	fmt.Print(colorYellow + `|___|`)
+	fmt.Print(colorRed)
+	fmt.Println(`  /       \`)
+	time.Sleep(20 * time.Millisecond)
+	fmt.Println(`             /_________\/_____\/_________\`)
+	time.Sleep(20 * time.Millisecond)
+	fmt.Print(colorReset)
+	fmt.Println()
 
-	// Print lines with a micro-delay to simulate a cool hacking launch sequence
-	for _, line := range lines {
-		fmt.Println(line)
-		time.Sleep(35 * time.Millisecond)
-	}
+	// 2. VULNSIGHT text logo in Cyan (Spelled correctly)
+	fmt.Print(colorCyan)
+	fmt.Println(`   __      __  _    _  _        _   _   ____   ___   ____  _   _  _____`)
+	time.Sleep(20 * time.Millisecond)
+	fmt.Println(`   \ \    / / | |  | || |      | \ | | / ___| |_ _| / ___|| | | ||_   _|`)
+	time.Sleep(20 * time.Millisecond)
+	fmt.Println(`    \ \  / /  | |  | || |      |  \| | \___ \  | | | |  _ | |_| |  | |  `)
+	time.Sleep(20 * time.Millisecond)
+	fmt.Println(`     \ \/ /   | |__| || |____  | |\  |  ___) | | | | |_| ||  _  |  | |  `)
+	time.Sleep(20 * time.Millisecond)
+	fmt.Println(`      \_/      \____/ |______| |_| \_| |____/ |___| \____||_| |_|  |_|  `)
+	time.Sleep(20 * time.Millisecond)
+	fmt.Print(colorReset)
+	fmt.Println()
 
-	// Dynamic interactive matrix loader sequence to look high level
+	// 3. Frame with version and credentials
+	fmt.Printf("        %s==[%s VulnSightAI v2.0.1 - Red Team Edition %s]==%s\n", colorRed, colorYellow, colorRed, colorReset)
+	fmt.Printf("        %s⚡ Powered by hackwithsaket%s\n", colorYellow, colorReset)
+	fmt.Println()
+	fmt.Printf("%s⚡========================================================================⚡%s\n", colorRed, colorReset)
+
+	// 4. Matrix loader sequence in bright cyan & green
 	loaderText := []string{
 		" [*] Connecting matrix socket interfaces... ",
 		" [*] Syncing local neural model endpoints... ",
@@ -209,9 +243,9 @@ func printWelcomeBanner() {
 	}
 
 	for _, text := range loaderText {
-		fmt.Print(grayColor + text + reset)
+		fmt.Print(colorCyan + text + colorReset)
 		time.Sleep(120 * time.Millisecond)
-		fmt.Println(snakeColor + "[SUCCESS]" + reset)
+		fmt.Println(colorGreen + "[SUCCESS]" + colorReset)
 	}
 	fmt.Println()
 }
