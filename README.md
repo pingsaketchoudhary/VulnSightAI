@@ -97,20 +97,40 @@ npm run dev
 The precompiled Go-based CLI client allows rapid, terminal-only assessments:
 
 ```bash
-# Basic Scan
-./vulnsight-cli --target example.com
+# Basic Scan on localhost
+./vulnsight-cli scan localhost
 
-# Comprehensive scan with custom threads and specific AI model
-./vulnsight-cli --target example.com --threads 20 --ai-model llama3:8b --port-range 1-10000
+# Comprehensive scan with custom model, custom ports, and proxy configuration
+./vulnsight-cli --model llama3:8b scan --ports 80,443,8080 --speed T4 --depth deep example.com
+
+# List past scan history
+./vulnsight-cli list
+
+# Retrieve and inspect findings for scan ID 5
+./vulnsight-cli show 5
+
+# Download HTML report for scan ID 5
+./vulnsight-cli report 5 audit_report.html
 ```
 
-### CLI Command Flags
-| Flag | Description | Default |
-| --- | --- | --- |
-| `--target` | Target IP address or domain | `localhost` |
-| `--threads` | Concurrent scan threads | `10` |
-| `--ai-model` | Selected Ollama AI model | `llama3:8b` |
-| `--port-range` | Custom port scan bounds | `1-1024` |
+### CLI Command Reference
+* **Global Flags:**
+  - `--server <url>`: VulnSightAI engine server URL (default: `http://localhost:8080`)
+  - `--api-key <key>`: Optional API key token header for server auth
+  - `--model <name>`: Ollama model name target for AI reviews (e.g. `llama3:8b`)
+
+* **Commands:**
+  - **`scan [flags] <target>`**: Triggers a live vulnerability scan.
+    - `--ports <range>`: Ports to scan (common, all, or custom ports like 80,443) [default: `common`]
+    - `--speed <level>`: Nmap speed T1 (slow) to T5 (insane) [default: `T3`]
+    - `--depth <mode>`: Subdomain brute-forcing depth (fast, deep) [default: `fast`]
+    - `--template <name>`: Custom Nuclei template file to execute
+    - `--proxy <url>`: SOCKS5/HTTP proxy tunnel (e.g. `socks5://127.0.0.1:9050`)
+    - `--user-agent <ua>`: Custom HTTP User-Agent header string
+    - `--rate-limit <rps>`: Request rate limit (RPS) [default: `0` / unlimited]
+  - **`list`**: Retrieves past scan archives.
+  - **`report <scan_id> [output_file]`**: Downloads compiled HTML scan report sheets.
+  - **`show <scan_id>`**: Outputs formatted scan findings in the terminal.
 
 ---
 
@@ -122,20 +142,20 @@ We publish compiled CLI release packages for multiple platforms. You can downloa
 Install using the native package manager:
 ```bash
 sudo dpkg -i vulnsight-cli_2.0.0_amd64.deb
-vulnsight-cli --target scanme.nmap.org
+vulnsight-cli scan scanme.nmap.org
 ```
 
 ### 🍏 macOS (Darwin Client)
 Download the macOS executable:
 ```bash
 chmod +x vulnsight-cli-mac
-./vulnsight-cli-mac --target scanme.nmap.org
+./vulnsight-cli-mac scan scanme.nmap.org
 ```
 
 ### Windows CLI Client
 Download `vulnsight-cli.exe` and execute it from PowerShell or Command Prompt:
 ```powershell
-.\vulnsight-cli.exe --target scanme.nmap.org
+.\vulnsight-cli.exe scan scanme.nmap.org
 ```
 
 ---
