@@ -1,0 +1,4 @@
+python-nmap
+pdfkit
+requests
+streamlit
