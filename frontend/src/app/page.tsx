@@ -3,6 +3,27 @@
 import { useState, useEffect, useRef } from "react";
 import { Shield, Server, Activity, AlertTriangle, CheckCircle, Database, ChevronDown, ChevronUp, FileText, Sliders } from "lucide-react";
 
+const getBackendUrl = () => {
+  if (typeof window !== "undefined") {
+    if (window.location.port === "3000") {
+      return "http://localhost:8080";
+    }
+    return `${window.location.protocol}//${window.location.host}`;
+  }
+  return "http://localhost:8080";
+};
+
+const getWebSocketUrl = (scanId: string | number) => {
+  if (typeof window !== "undefined") {
+    const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
+    if (window.location.port === "3000") {
+      return `ws://localhost:8080/api/ws/scan/${scanId}`;
+    }
+    return `${proto}//${window.location.host}/api/ws/scan/${scanId}`;
+  }
+  return `ws://localhost:8080/api/ws/scan/${scanId}`;
+};
+
 export default function Home() {
   const [target, setTarget] = useState("");
   const [scanStatus, setScanStatus] = useState("idle"); // idle, scanning, error, completed
@@ -54,7 +75,7 @@ http:
     }
     setResetStatus("resetting");
     try {
-      const res = await fetch("http://localhost:8080/api/reset", {
+      const res = await fetch(`${getBackendUrl()}/api/reset`, {
         method: "POST",
       });
       if (res.ok) {
@@ -84,7 +105,7 @@ http:
 
   const fetchTemplates = async () => {
     try {
-      const res = await fetch("http://localhost:8080/api/templates");
+      const res = await fetch(`${getBackendUrl()}/api/templates`);
       if (res.ok) {
         const data = await res.json();
         setTemplates(data || []);
@@ -96,7 +117,7 @@ http:
 
   const fetchHistory = async () => {
     try {
-      const res = await fetch("http://localhost:8080/api/scans");
+      const res = await fetch(`${getBackendUrl()}/api/scans`);
       if (res.ok) {
         setHistory(await res.json() || []);
       }
@@ -107,7 +128,7 @@ http:
 
   const fetchModels = async () => {
     try {
-      const res = await fetch("http://localhost:8080/api/models");
+      const res = await fetch(`${getBackendUrl()}/api/models`);
       if (res.ok) {
         const data = await res.json();
         setModels(data || []);
@@ -126,7 +147,7 @@ http:
 
   const fetchDiagnostics = async () => {
     try {
-      const res = await fetch("http://localhost:8080/api/diagnostics");
+      const res = await fetch(`${getBackendUrl()}/api/diagnostics`);
       if (res.ok) {
         setDiagnostics(await res.json() || {});
       }
@@ -138,7 +159,7 @@ http:
   const bootstrapTools = async () => {
     setBootstrapStatus("loading");
     try {
-      const res = await fetch("http://localhost:8080/api/setup", {
+      const res = await fetch(`${getBackendUrl()}/api/setup`, {
         method: "POST",
       });
       if (res.ok) {
@@ -157,7 +178,7 @@ http:
     setSelectedScanId(scanId);
     setEvents([]);
     try {
-      const res = await fetch(`http://localhost:8080/api/scan/${scanId}`);
+      const res = await fetch(`${getBackendUrl()}/api/scan/${scanId}`);
       if (res.ok) {
         const data = await res.json();
         const simulatedEvents: any[] = [];
@@ -196,7 +217,7 @@ http:
     setSelectedScanId(null);
 
     try {
-      const res = await fetch("http://localhost:8080/api/scan", {
+      const res = await fetch(`${getBackendUrl()}/api/scan`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -228,7 +249,7 @@ http:
   const connectWebSocket = (scanId: string) => {
     if (wsRef.current) wsRef.current.close();
 
-    const ws = new WebSocket(`ws://localhost:8080/api/ws/scan/${scanId}`);
+    const ws = new WebSocket(getWebSocketUrl(scanId));
     wsRef.current = ws;
 
     ws.onmessage = (event) => {
@@ -255,7 +276,7 @@ http:
     setComposerStatus("validating");
     setComposerError("");
     try {
-      const res = await fetch("http://localhost:8080/api/templates/validate", {
+      const res = await fetch(`${getBackendUrl()}/api/templates/validate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ yaml: composerYAML }),
@@ -287,7 +308,7 @@ http:
     setComposerStatus("saving");
     setComposerError("");
     try {
-      const res = await fetch("http://localhost:8080/api/templates/save", {
+      const res = await fetch(`${getBackendUrl()}/api/templates/save`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: composerName, yaml: composerYAML }),
@@ -829,7 +850,7 @@ http:
                       <span className="text-[10px] text-neutral-500">{item.timestamp}</span>
                     </div>
                     <a
-                      href={`http://localhost:8080/api/report/${item.id}`}
+                      href={`${getBackendUrl()}/api/report/${item.id}`}
                       onClick={(e) => e.stopPropagation()} // prevent loading scan details on download click
                       className="mt-2 text-xs text-center block w-full bg-white/5 hover:bg-white/10 text-white rounded py-1 border border-white/10 transition-all"
                     >

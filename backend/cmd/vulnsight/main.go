@@ -1,17 +1,23 @@
 package main
 
 import (
+	"embed"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 
-    "vulnsight.ai/internal/api"
+	"vulnsight.ai/internal/api"
 	"vulnsight.ai/internal/db"
 )
+
+//go:embed dist
+var frontendFS embed.FS
 
 func main() {
 	// Initialize Database
@@ -82,6 +88,27 @@ func main() {
 		// Wipes local dependencies and resets setup directory
 		r.Post("/reset", api.ResetHandler)
 	})
+
+	// Serve embedded static frontend React application
+	publicFS, err := fs.Sub(frontendFS, "dist")
+	if err == nil {
+		fileServer := http.FileServer(http.FS(publicFS))
+		r.Handle("/*", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			path := r.URL.Path
+			if path == "/" {
+				fileServer.ServeHTTP(w, r)
+				return
+			}
+			f, err := publicFS.Open(strings.TrimPrefix(path, "/"))
+			if err == nil {
+				f.Close()
+				fileServer.ServeHTTP(w, r)
+			} else {
+				r.URL.Path = "/"
+				fileServer.ServeHTTP(w, r)
+			}
+		}))
+	}
 
 	port := os.Getenv("PORT")
 	if port == "" {
