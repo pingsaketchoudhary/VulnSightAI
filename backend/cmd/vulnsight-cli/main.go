@@ -60,7 +60,7 @@ func main() {
 	args := flag.Args()
 	if len(args) < 1 {
 		printWelcomeBanner()
-		printDetailedHelp()
+		printShortUsage()
 		os.Exit(0)
 	}
 
@@ -72,6 +72,8 @@ func main() {
 	}
 
 	switch subcommand {
+	case "help":
+		printDetailedHelp()
 	case "diagnostics":
 		diagnosticsCommand(server, *apiKeyFlag)
 	case "list":
@@ -211,6 +213,22 @@ func printWelcomeBanner() {
 		time.Sleep(120 * time.Millisecond)
 		fmt.Println(snakeColor + "[SUCCESS]" + reset)
 	}
+	fmt.Println()
+}
+
+func printShortUsage() {
+	fmt.Printf("%sUSAGE:%s\n", colorBold, colorReset)
+	fmt.Println("  vulnsight-cli <command> [arguments]")
+	fmt.Println()
+	fmt.Printf("%sCORE COMMANDS:%s\n", colorBold, colorReset)
+	fmt.Printf("  %-25s %s\n", colorCyan+"scan <target>"+colorReset, "Trigger a security scan on a target")
+	fmt.Printf("  %-25s %s\n", colorCyan+"list"+colorReset, "List past scan records")
+	fmt.Printf("  %-25s %s\n", colorCyan+"show <scan_id>"+colorReset, "Inspect findings for a scan ID")
+	fmt.Printf("  %-25s %s\n", colorCyan+"update"+colorReset, "Auto-update VulnSightAI binary")
+	fmt.Printf("  %-25s %s\n", colorCyan+"uninstall"+colorReset, "Cleanly remove the framework")
+	fmt.Println()
+	fmt.Printf("%sHELP & DOCS:%s\n", colorBold, colorReset)
+	fmt.Println("  For detailed help & custom flags, execute: " + colorCyan + "vulnsight-cli --help" + colorReset + " or " + colorCyan + "vulnsight-cli help" + colorReset)
 	fmt.Println()
 }
 
