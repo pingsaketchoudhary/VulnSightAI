@@ -55,46 +55,154 @@
 
 ---
 
-## 🛠️ Installation & Engagement Guide
+## 🛠️ Step-by-Step Installation Protocols
 
-### Prereqs
-* **Go** (v1.21 or higher)
-* **Node.js** (v18 or higher)
-* **Ollama** (for local AI reviews)
-  ```bash
-  curl -fsSL https://ollama.com/install.sh | sh
-  ollama pull llama3:8b  # or mistral, phi3
-  ```
-
-### 1. Build and Start the Full-Stack Application
-Execute the military-grade automated start script:
-```bash
-chmod +x start.sh
-./start.sh
-```
-This automatically verifies Ollama, boots the Golang Backend Engine on port `8080`, and fires up the Next.js Dashboard on port `3000`.
-
-### 2. Manual Setup (Optional)
-**Backend:**
-```bash
-cd backend
-go mod download
-go build -o vulnsight_bin cmd/vulnsight/main.go
-./vulnsight_bin
-```
-**Frontend:**
-```bash
-cd frontend
-npm install
-npm run build
-npm run dev
-```
+Please select your deployment platform below for detailed setup procedures.
 
 ---
 
-## 💻 CLI Client Usage
+### 🐧 Debian / Ubuntu / Kali Linux (CLI & GUI Setup)
 
-The precompiled Go-based CLI client allows rapid, terminal-only assessments:
+#### 1. System Requirements & Prerequisites
+Ensure Git, Go (v1.21+), Node.js (v18+), NPM, and Ollama are installed on your host system:
+```bash
+# Update repositories and install compilers
+sudo apt update && sudo apt install git golang nodejs npm -y
+
+# Install and configure local AI engine (Ollama)
+curl -fsSL https://ollama.com/install.sh | sh
+ollama serve & 
+ollama pull llama3:8b
+```
+
+#### 2. Repository Cloning & File Setup
+```bash
+# Clone the repository
+git clone https://github.com/pingsaketchoudhary/VulnSightAI.git
+cd VulnSightAI
+```
+
+#### 3. Launching the Web GUI (Next.js Dashboard)
+```bash
+# Provide script execution rights and run the launcher
+chmod +x start.sh
+./start.sh
+```
+*Note: This fires up both the Go server on port `8080` and Next.js Dashboard on port `3000` automatically.*
+
+#### 4. Running the CLI Client
+* **Manual Compilation:**
+  ```bash
+  cd backend
+  go build -o build/vulnsight-cli cmd/vulnsight-cli/main.go
+  ./build/vulnsight-cli scan localhost
+  ```
+* **Install via DEB package (Recommended):**
+  Download the latest debian release package and execute:
+  ```bash
+  sudo dpkg -i vulnsight-cli_2.0.0_amd64.deb
+  vulnsight-cli scan scanme.nmap.org
+  ```
+
+---
+
+### 🍏 macOS / Darwin (CLI & GUI Setup)
+
+#### 1. System Requirements & Prerequisites
+Ensure Homebrew package manager is installed, then run the dependency setup:
+```bash
+# Install Git, Go, and Node.js
+brew install git go node
+
+# Install and configure Ollama
+brew install ollama
+ollama serve &
+ollama pull llama3:8b
+```
+
+#### 2. Repository Cloning & File Setup
+```bash
+# Clone the repository
+git clone https://github.com/pingsaketchoudhary/VulnSightAI.git
+cd VulnSightAI
+```
+
+#### 3. Launching the Web GUI (Manual Step)
+Run the backend and frontend in separate terminal windows:
+* **Terminal 1 (Go Backend):**
+  ```bash
+  cd backend
+  go run cmd/vulnsight/main.go
+  ```
+* **Terminal 2 (Next.js Frontend):**
+  ```bash
+  cd frontend
+  npm install
+  npm run dev
+  ```
+*Access the visual board at: `http://localhost:3000`*
+
+#### 4. Running the CLI Client
+* **Manual Compilation:**
+  ```bash
+  cd backend
+  go build -o build/vulnsight-cli-mac cmd/vulnsight-cli/main.go
+  ./build/vulnsight-cli-mac scan localhost
+  ```
+
+---
+
+### 🪟 Microsoft Windows (CLI & GUI Setup)
+
+#### 1. System Requirements & Prerequisites
+Ensure you download and install the official Windows installers for the following prerequisites:
+* **Git**: [git-scm.com/download/win](https://git-scm.com/download/win)
+* **Go**: [go.dev/dl/](https://go.dev/dl/)
+* **Node.js**: [nodejs.org/en/download/](https://nodejs.org/en/download/)
+* **Ollama**: Download the installer from [ollama.com/download/windows](https://ollama.com/download/windows). Once installed, run the following in PowerShell:
+  ```powershell
+  ollama pull llama3:8b
+  ```
+
+#### 2. Repository Cloning & File Setup
+Open PowerShell or Command Prompt:
+```powershell
+# Clone the repository
+git clone https://github.com/pingsaketchoudhary/VulnSightAI.git
+cd VulnSightAI
+```
+
+#### 3. Launching the Web GUI (Manual Step)
+Launch services in separate terminal/PowerShell sessions:
+* **Session 1 (Go Backend):**
+  ```powershell
+  cd backend
+  go run cmd/vulnsight/main.go
+  ```
+* **Session 2 (Next.js Frontend):**
+  ```powershell
+  cd frontend
+  npm install
+  npm run dev
+  ```
+*Access the visual board at: `http://localhost:3000`*
+
+#### 4. Running the CLI Client
+* **Manual Compilation:**
+  ```powershell
+  cd backend
+  go build -o build/vulnsight-cli.exe cmd/vulnsight-cli/main.go
+  .\build\vulnsight-cli.exe scan localhost
+  ```
+* **Direct Execution:**
+  Download `vulnsight-cli.exe` from the Releases tab and run:
+  ```powershell
+  .\vulnsight-cli.exe scan scanme.nmap.org
+  ```
+
+---
+
+## 💻 CLI Client Usage Reference
 
 ```bash
 # Basic Scan on localhost
