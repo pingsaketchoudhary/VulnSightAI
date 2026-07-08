@@ -67,6 +67,10 @@ func main() {
 	subcommand := args[0]
 	server := strings.TrimSuffix(*serverFlag, "/")
 
+	if subcommand != "completion" {
+		printWelcomeBanner()
+	}
+
 	switch subcommand {
 	case "diagnostics":
 		diagnosticsCommand(server, *apiKeyFlag)
@@ -157,28 +161,57 @@ func main() {
 		}
 	case "completion":
 		completionCommand()
+	case "update":
+		updateCommand()
 	default:
 		fmt.Printf("%s[!] Error: Unknown command '%s'%s\n", colorRed, subcommand, colorReset)
-		printWelcomeBanner()
 		printDetailedHelp()
 		os.Exit(1)
 	}
 }
 
 func printWelcomeBanner() {
-	banner := `
-%s🛡️  __     __      _       ____  _       _     _      _    ___ 
- \ \   / /_  _ | | _ _ / ___|(_) __ _| |__ | |_   / \  |_ _|
-  \ \ / /| | | || |/ _' \___ \| |/ _' | '_ \| __| / _ \  | | 
-   \ V / | |_| || | (_| |___) | | (_| | | | | |_ / ___ \ | | 
-    \_/   \__,_||_|\__,_|____/|_|\__, |_| |_|\__/_/   \_\___|
-                                 |___/                       %s
-  %s===========================================================%s
-  %s  🛡️  VulnSightAI v2.0 // Military Grade Recon & Vulnerability Scanner%s
-  %s  ⚡ Powered by hackwithsaket%s
-  %s===========================================================%s
-`
-	fmt.Printf(banner, colorCyan, colorReset, colorGray, colorReset, colorBold, colorReset, colorGreen, colorReset, colorGray, colorReset)
+	// Snake ASCII art in green, VulnSight in cyan/red, frame in dark grey
+	snakeColor := "\033[1;32m" // Bright Green
+	textColor := "\033[1;36m"  // Cyan
+	accColor := "\033[1;31m"   // Bright Red
+	grayColor := "\033[1;30m"  // Dark Gray
+	reset := "\033[0m"
+
+	// Define banner lines
+	lines := []string{
+		grayColor + " 💀 [BLACKHAT MATRIX RECON ENGINE ACTIVE] 💀" + reset,
+		snakeColor + "        .---.  .---.    " + textColor + " _     _  _  _       ____  _       _     _   " + reset,
+		snakeColor + "       /     \\/     \\   " + textColor + "| |   | || || |     / ___|(_) __ _| |__ | |_ " + reset,
+		snakeColor + "      |  /\\   /\\   /|   " + textColor + "| |   | || || |     \\___ \\| |/ _` | '_ \\| __|" + reset,
+		snakeColor + "      |  \\ \\_/ /  / |   " + textColor + "| |___| || || |___   ___) | | (_| | | | | |_ " + reset,
+		snakeColor + "       \\  \\   /  /  /   " + textColor + "|_____|_||_||_____| |____/|_|\\__, |_| |_|\\__|" + reset,
+		snakeColor + "        \\  \\_/  /  /    " + grayColor + "                             |___/           " + reset,
+		snakeColor + "         \\     /  /     " + accColor + "  ==[ VulnSightAI v2.0.1 - Red Team Edition ]==" + reset,
+		snakeColor + "          \\___/  /      " + grayColor + "  ⚡ Powered by hackwithsaket                 " + reset,
+		snakeColor + "              \\_/       " + reset,
+		grayColor + " ⚡========================================================================⚡" + reset,
+	}
+
+	// Print lines with a micro-delay to simulate a cool hacking launch sequence
+	for _, line := range lines {
+		fmt.Println(line)
+		time.Sleep(35 * time.Millisecond)
+	}
+
+	// Dynamic interactive matrix loader sequence to look high level
+	loaderText := []string{
+		" [*] Connecting matrix socket interfaces... ",
+		" [*] Syncing local neural model endpoints... ",
+		" [*] Loading Nuclei/Nmap signature database... ",
+	}
+
+	for _, text := range loaderText {
+		fmt.Print(grayColor + text + reset)
+		time.Sleep(120 * time.Millisecond)
+		fmt.Println(snakeColor + "[SUCCESS]" + reset)
+	}
+	fmt.Println()
 }
 
 func printDetailedHelp() {
@@ -247,6 +280,10 @@ func printDetailedHelp() {
 	fmt.Println("    Configures and installs the VulnSightAI Backend as a Systemd service (Linux auto-boot).")
 	fmt.Println("    Example: sudo vulnsight-cli service install")
 
+	fmt.Printf("\n  %supdate%s\n", colorCyan, colorReset)
+	fmt.Println("    Checks GitHub for the latest release and auto-updates the running binary in-place.")
+	fmt.Println("    Example: vulnsight-cli update")
+
 	fmt.Printf("\n  %scompletion%s\n", colorCyan, colorReset)
 	fmt.Println("    Generates Shell Autocomplete script configuration for Bash.")
 	fmt.Println("    Example: source <(vulnsight-cli completion)")
@@ -254,6 +291,162 @@ func printDetailedHelp() {
 	fmt.Println("\n===========================================================")
 	fmt.Printf("  %sFor security scanning, ensure you have explicit permission on the target.%s\n", colorYellow, colorReset)
 	fmt.Println("===========================================================")
+}
+
+type GitHubRelease struct {
+	TagName string `json:"tag_name"`
+	Assets  []struct {
+		Name        string `json:"name"`
+		DownloadURL string `json:"browser_download_url"`
+	} `json:"assets"`
+}
+
+func updateCommand() {
+	fmt.Printf("%s[*] Checking for updates from GitHub...%s\n", colorCyan, colorReset)
+	
+	client := &http.Client{Timeout: 15 * time.Second}
+	resp, err := client.Get("https://api.github.com/repos/pingsaketchoudhary/VulnSightAI/releases/latest")
+	if err != nil {
+		fmt.Printf("%s[!] Error fetching latest release: %v%s\n", colorRed, err, colorReset)
+		return
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		fmt.Printf("%s[!] GitHub API returned status code %d%s\n", colorRed, resp.StatusCode, colorReset)
+		return
+	}
+
+	var release GitHubRelease
+	if err := json.NewDecoder(resp.Body).Decode(&release); err != nil {
+		fmt.Printf("%s[!] Error decoding release JSON: %v%s\n", colorRed, err, colorReset)
+		return
+	}
+
+	currentVersion := "v2.0.1"
+	fmt.Printf("%s[*] Current version: %s | Latest version: %s%s\n", colorGray, currentVersion, release.TagName, colorReset)
+
+	if release.TagName == currentVersion {
+		fmt.Printf("%s[+] VulnSightAI is already up to date!%s\n", colorGreen, colorReset)
+		return
+	}
+
+	// Determine asset name to look for
+	var targetAsset string
+	switch runtime.GOOS {
+	case "linux":
+		targetAsset = "vulnsight-cli"
+	case "darwin":
+		targetAsset = "vulnsight-cli-mac"
+	case "windows":
+		targetAsset = "vulnsight-cli.exe"
+	default:
+		fmt.Printf("%s[!] Unsupported OS for auto-update: %s%s\n", colorRed, runtime.GOOS, colorReset)
+		return
+	}
+
+	var downloadURL string
+	for _, asset := range release.Assets {
+		if asset.Name == targetAsset {
+			downloadURL = asset.DownloadURL
+			break
+		}
+	}
+
+	if downloadURL == "" {
+		fmt.Printf("%s[!] Could not find matching precompiled binary asset '%s' in the latest release.%s\n", colorRed, targetAsset, colorReset)
+		return
+	}
+
+	fmt.Printf("%s[*] Downloading update from: %s...%s\n", colorCyan, downloadURL, colorReset)
+
+	// Get path to current executable
+	execPath, err := os.Executable()
+	if err != nil {
+		fmt.Printf("%s[!] Error getting current executable path: %v%s\n", colorRed, err, colorReset)
+		return
+	}
+
+	// Resolve symlinks if any
+	execPath, err = filepath.EvalSymlinks(execPath)
+	if err != nil {
+		fmt.Printf("%s[!] Error resolving executable path symlinks: %v%s\n", colorRed, err, colorReset)
+		return
+	}
+
+	// Download new binary
+	req, err := http.NewRequest("GET", downloadURL, nil)
+	if err != nil {
+		fmt.Printf("%s[!] Error creating request: %v%s\n", colorRed, err, colorReset)
+		return
+	}
+
+	downloadResp, err := client.Do(req)
+	if err != nil {
+		fmt.Printf("%s[!] Error downloading asset: %v%s\n", colorRed, err, colorReset)
+		return
+	}
+	defer downloadResp.Body.Close()
+
+	if downloadResp.StatusCode != http.StatusOK {
+		fmt.Printf("%s[!] HTTP download returned status %d%s\n", colorRed, downloadResp.StatusCode, colorReset)
+		return
+	}
+
+	// Create a temp file in the same directory as the executable to ensure they are on the same filesystem (so rename works)
+	tempFile, err := os.CreateTemp(filepath.Dir(execPath), "vulnsight-update-")
+	if err != nil {
+		fmt.Printf("%s[!] Error creating temp file: %v%s\n", colorRed, err, colorReset)
+		return
+	}
+	tempPath := tempFile.Name()
+	defer os.Remove(tempPath) // Clean up temp file if rename fails
+	defer tempFile.Close()
+
+	// Write response to temp file
+	_, err = io.Copy(tempFile, downloadResp.Body)
+	if err != nil {
+		fmt.Printf("%s[!] Error writing downloaded binary: %v%s\n", colorRed, err, colorReset)
+		return
+	}
+	tempFile.Close()
+
+	// Set execute permissions
+	err = os.Chmod(tempPath, 0755)
+	if err != nil {
+		fmt.Printf("%s[!] Error setting execute permissions on temp file: %v%s\n", colorRed, err, colorReset)
+		return
+	}
+
+	// Rename temp file to current executable
+	if runtime.GOOS == "windows" {
+		// On Windows, rename existing running file first, then write new one
+		oldPath := execPath + ".old"
+		_ = os.Remove(oldPath) // Delete previous .old if exists
+		err = os.Rename(execPath, oldPath)
+		if err != nil {
+			fmt.Printf("%s[!] Error renaming running executable: %v%s\n", colorRed, err, colorReset)
+			return
+		}
+		err = os.Rename(tempPath, execPath)
+		if err != nil {
+			// Rollback rename
+			_ = os.Rename(oldPath, execPath)
+			fmt.Printf("%s[!] Error renaming new executable: %v%s\n", colorRed, err, colorReset)
+			return
+		}
+		// Try to remove the old file (often fails since it's running, but it's fine, it will disappear on reboot/next command)
+		_ = os.Remove(oldPath)
+	} else {
+		// On Linux/macOS, we can overwrite it directly
+		err = os.Rename(tempPath, execPath)
+		if err != nil {
+			fmt.Printf("%s[!] Error replacing executable: %v%s\n", colorRed, err, colorReset)
+			return
+		}
+	}
+
+	fmt.Printf("%s[+] VulnSightAI successfully updated to %s!%s\n", colorGreen, release.TagName, colorReset)
 }
 
 func makeRequest(method, url, apiKey string, body io.Reader) (*http.Response, error) {
