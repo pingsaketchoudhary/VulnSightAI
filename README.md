@@ -1,99 +1,147 @@
-VulnSightAI: An AI-Powered Vulnerability Assessment Dashboard 
+# 🛡️ VulnSightAI v2.0.0 (Military Grade)
+> **Next-Generation Autonomous Reconnaissance, Threat Profiling, & AI-Driven Vulnerability Insights**
 
-VulnSightAI is a comprehensive, open-source framework that automates the initial stages of a penetration test. It integrates reconnaissance, AI-driven analysis, and real vulnerability scanning into a single, easy-to-use tool with both a CLI and an interactive Web Dashboard.
+[![Version](https://img.shields.io/badge/Version-2.0.0-blueviolet?style=for-the-badge&logo=git)](https://github.com/pingsaketchoudhary/VulnSightAI)
+[![Go Backend](https://img.shields.io/badge/Backend-Go%201.21-00ADD8?style=for-the-badge&logo=go)](https://golang.org)
+[![React Frontend](https://img.shields.io/badge/Frontend-Next.js%20React-black?style=for-the-badge&logo=nextdotjs)](https://nextjs.org)
+[![License](https://img.shields.io/badge/License-MIT-red?style=for-the-badge)](LICENSE)
 
-✨ Key Features
+---
 
-Interactive Web Dashboard: A user-friendly interface built with Streamlit to run scans and visualize results.
+## ☣️ System Overview
 
-Persistent Database: Uses SQLite to save all scan results, providing a complete history of past assessments.
+**VulnSightAI v2.0.0** is an enterprise-grade threat discovery and vulnerability correlation engine. Completely rewritten from the legacy Python/Streamlit codebase, the framework now harnesses a **high-concurrency Go Engine** and a **React/Next.js Matrix Dashboard** to deliver sub-second passive recon, native network banner mapping, secret leak checks, and automated AI security mitigations.
 
-Real Vulnerability Scanning: Leverages the power of Nuclei to run thousands of templates and confirm real-world vulnerabilities.
+```
+                  ┌──────────────────────────────┐
+                  │      Target Identification   │
+                  └──────────────┬───────────────┘
+                                 ▼
+         ┌───────────────────────┴───────────────────────┐
+         │         Autonomous Go Scanning Engine         │
+         └───────┬───────────────┬───────────────┬───────┘
+                 │               │               │
+                 ▼               ▼               ▼
+         ┌───────────────┐┌───────────────┐┌───────────────┐
+         │  TCP Banner   ││   Web Leak    ││ WAF & Network │
+         │   Profiler    ││    Finder     ││  Diagnostics  │
+         └───────┬───────┘└───────┬───────┘└───────┬───────┘
+                 │               │               │
+                 └───────────────┼───────────────┘
+                                 ▼
+         ┌───────────────────────┴───────────────────────┐
+         │     CISA KEV & MITRE ATT&CK Threat Mapper     │
+         └───────────────────────┬───────────────────────┘
+                                 ▼
+         ┌───────────────────────┴───────────────────────┐
+         │      AI Contextual Classification Swarm       │
+         └───────────────────────┬───────────────────────┘
+                                 ▼
+         ┌───────────────────────┴───────────────────────┐
+         │   Matrix Dashboard (3000) & HTML Report Gen   │
+         └───────────────────────────────────────────────┘
+```
 
-Automated Reconnaissance: Discovers subdomains (subfinder), scans for open ports (nmap), and identifies web technologies (whatweb).
+---
 
-🧠 AI-Powered CVE Suggestions: Uses the Google Gemini AI to suggest potential CVEs based on the detected technologies for further research.
+## ⚡ Key Features (v2.0.0 Premium Stack)
 
-📄 Professional Reporting: Exports all findings into clean HTML and PDF reports, downloadable directly from the web dashboard.
+* **🚀 High-Concurrency Go Scanner**: Scans open ports, performs raw TCP handshakes, sends active protocol probes (HTTP/SMTP/SSH/Redis PINGs), and matches banners against Nmap signatures using a **Consensus Merger** to prevent discrepancy and service spoofing.
+* **📡 CISA KEV & Zero-Day Threat Feed Aggregator**: Dynamically pulls and parses CISA's official **Known Exploited Vulnerabilities** catalog to flag vulnerabilities currently targeted by threat actors in the wild. Supports full offline fallback mode to eliminate DNS/HTTP leaks during covert operations.
+* **🧠 Contextual Threat Classifier (AI Reviewer)**: Integrates with local LLMs (Ollama) to inspect findings and filter benign system services (YouTube, development workflows, database loops) from target attack surfaces.
+* **🔥 Proprietary Web Leak Engine**: Passthroughs and searches for exposed secret variables (`.env`), source repositories (`.git/config`), SQL dumps, and compressed archives. Applies strict magic header validation to filter out wildcard page redirects.
+* **📊 Real-time CVE & MITRE ATT&CK Correlation**: Automatically correlates identified software versions and leaks to CVSS scores, EPSS probabilities, and corresponding **MITRE ATT&CK Tactics** (Initial Access, Execution, Credential Access, lateral movement).
+* **🎛️ Cyber-themed Matrix Dashboard**: Web UI displaying column tactics, active threat glows, interactive node graphs, real-time log streaming, and PDF/HTML exports.
 
-🚀 Demo
+---
 
-Web Dashboard Interface:
-(A screenshot of your web app showing the Nuclei findings and scan history would be perfect here)
+## 🛠️ Installation & Engagement Guide
 
-🛠️ Installation Guide (Kali Linux)
-This tool is designed for Debian-based systems like Kali Linux.
+### Prereqs
+* **Go** (v1.21 or higher)
+* **Node.js** (v18 or higher)
+* **Ollama** (for local AI reviews)
+  ```bash
+  curl -fsSL https://ollama.com/install.sh | sh
+  ollama pull llama3:8b  # or mistral, phi3
+  ```
 
-1. Clone the Repository:
+### 1. Build and Start the Full-Stack Application
+Execute the military-grade automated start script:
+```bash
+chmod +x start.sh
+./start.sh
+```
+This automatically verifies Ollama, boots the Golang Backend Engine on port `8080`, and fires up the Next.js Dashboard on port `3000`.
 
-git clone https://github.com/pingsaketchoudhary/VulnSightAI.git
-cd VulnSightAI
+### 2. Manual Setup (Optional)
+**Backend:**
+```bash
+cd backend
+go mod download
+go build -o vulnsight_bin cmd/vulnsight/main.go
+./vulnsight_bin
+```
+**Frontend:**
+```bash
+cd frontend
+npm install
+npm run build
+npm run dev
+```
 
-2. Install Required Tools:
+---
 
-# Install Go, Nuclei, Subfinder, and other dependencies
-sudo apt update && sudo apt install golang-go -y
-go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
-echo 'export PATH=$PATH:~/go/bin' >> ~/.bashrc
-source ~/.bashrc
-nuclei -update-templates
+## 💻 CLI Client Usage
 
-# Install wkhtmltopdf for PDF reports
-wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.bullseye_amd64.deb
-sudo dpkg -i wkhtmltox_0.12.6.1-2.bullseye_amd64.deb
-sudo apt-get install -f -y
+The precompiled Go-based CLI client allows rapid, terminal-only assessments:
 
-3. Set Up Python Environment:
+```bash
+# Basic Scan
+./vulnsight-cli --target example.com
 
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+# Comprehensive scan with custom threads and specific AI model
+./vulnsight-cli --target example.com --threads 20 --ai-model llama3:8b --port-range 1-10000
+```
 
-4. Set Up API Key:
+### CLI Command Flags
+| Flag | Description | Default |
+| --- | --- | --- |
+| `--target` | Target IP address or domain | `localhost` |
+| `--threads` | Concurrent scan threads | `10` |
+| `--ai-model` | Selected Ollama AI model | `llama3:8b` |
+| `--port-range` | Custom port scan bounds | `1-1024` |
 
-Generate a free API key from Google AI Studio.
+---
 
-Create a file named config.json in the project's root folder.
+## 📦 Cross-Platform Installation Releases
 
-Add the following content and paste your key:
+We publish compiled CLI release packages for multiple platforms. You can download these binaries directly from our [GitHub Releases](https://github.com/pingsaketchoudhary/VulnSightAI/releases) section.
 
-{
-  "GEMINI_API_KEY": "PASTE_YOUR_API_KEY_HERE"
-}
+### 🐧 Debian / Ubuntu / Kali Linux (Installer Package)
+Install using the native package manager:
+```bash
+sudo dpkg -i vulnsight-cli_2.0.0_amd64.deb
+vulnsight-cli --target scanme.nmap.org
+```
 
-usage Usage
+### 🍏 macOS (Darwin Client)
+Download the macOS executable:
+```bash
+chmod +x vulnsight-cli-mac
+./vulnsight-cli-mac --target scanme.nmap.org
+```
 
-Running the Web Dashboard (Recommended)
-streamlit run web/app.py
+### Windows CLI Client
+Download `vulnsight-cli.exe` and execute it from PowerShell or Command Prompt:
+```powershell
+.\vulnsight-cli.exe --target scanme.nmap.org
+```
 
-Open your browser and navigate to the local URL provided by Streamlit.
+---
 
-Running the CLI Tool
-# Basic scan with PDF report
-python3 src/main_cli.py --target example.com --pdf output/report.pdf
+## 📜 Disclaimer & Licensing
 
+MIT License - Copyright (c) 2026 Saket Kumar Choudhary.
 
-📂 Project Structure
-/VulnSightAI
-│
-├── /src
-│   ├── main_cli.py
-│   ├── recon_engine.py
-│   ├── ai_suggester.py
-│   └── report_generator.py
-│
-├── /output/
-│   └── .gitkeep
-│
-├── config.json
-├── requirements.txt
-├── README.md
-├── LICENSE
-└── .gitignore
-
-📜 License
-This project is licensed under the MIT License.
-
-⚠️ Disclaimer
-This tool is intended for educational purposes and ethical testing only. Use it only on systems for which you have explicit permission. The developer is not responsible for any unauthorized activities.
+**WARNING**: This recon tool is strictly intended for educational exercises, ethical auditing, and authorized system assessments. Scanning targets without explicit permission is illegal. The author holds no liability for malicious actions or network abuse caused by this tool.
