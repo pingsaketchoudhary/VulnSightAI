@@ -66,142 +66,146 @@ Please select your deployment platform below for detailed setup procedures.
 
 ### 🐧 Debian / Ubuntu / Kali Linux (CLI & GUI Setup)
 
-#### 1. System Requirements & Prerequisites
-Ensure Git, Go (v1.21+), Node.js (v18+), NPM, and Ollama are installed on your host system:
+#### Option A: Instant Production Launch (Recommended)
+Deploy instantly without Go compilers, Node.js, or NPM. Only Ollama is required for local threat analysis:
 ```bash
-# Update repositories and install compilers
-sudo apt update && sudo apt install git golang nodejs npm -y
-
-# Install and configure local AI engine (Ollama)
+# 1. Download and start local AI (Ollama)
 curl -fsSL https://ollama.com/install.sh | sh
 ollama serve & 
 ollama pull llama3:8b
-```
 
-#### 2. Repository Cloning & File Setup
+# 2. Download precompiled VulnSightAI Server from Releases
+wget https://github.com/pingsaketchoudhary/VulnSightAI/releases/download/v2.0.1/vulnsight-server
+chmod +x vulnsight-server
+
+# 3. Launch unified server (GUI & API live on port 8080)
+./vulnsight-server
+```
+*Access the cyber matrix dashboard instantly at: `http://localhost:8080`*
+
+#### Option B: Build from Source (Developer Setup)
+If you want to compile files manually or modify the source:
 ```bash
-# Clone the repository
+# 1. Install prerequisites (Git, Go, Node.js, NPM, Ollama)
+sudo apt update && sudo apt install git golang nodejs npm -y
+curl -fsSL https://ollama.com/install.sh | sh
+ollama serve & 
+ollama pull llama3:8b
+
+# 2. Clone repository & compile static frontend
 git clone https://github.com/pingsaketchoudhary/VulnSightAI.git
 cd VulnSightAI
+cd frontend && npm install && npm run build
+cd ..
+
+# 3. Copy compiled frontend dist into Go embedded directory
+mkdir -p backend/cmd/vulnsight/dist
+cp -r frontend/out/* backend/cmd/vulnsight/dist/
+
+# 4. Compile and launch unified backend server binary
+cd backend
+go build -o vulnsight-server cmd/vulnsight/main.go
+./vulnsight-server
 ```
 
-#### 3. Launching the Web GUI (Next.js Dashboard)
+#### Option C: Native Debian CLI Client Installation
+If you only need the terminal CLI client to scan targets without a GUI:
 ```bash
-# Provide script execution rights and run the launcher
-chmod +x start.sh
-./start.sh
-```
-*Note: This fires up both the Go server on port `8080` and Next.js Dashboard on port `3000` automatically.*
+# Download and install via native package manager
+wget https://github.com/pingsaketchoudhary/VulnSightAI/releases/download/v2.0.1/vulnsight-cli_2.0.1_amd64.deb
+sudo dpkg -i vulnsight-cli_2.0.1_amd64.deb
 
-#### 4. Running the CLI Client
-* **Manual Compilation:**
-  ```bash
-  cd backend
-  go build -o build/vulnsight-cli cmd/vulnsight-cli/main.go
-  ./build/vulnsight-cli scan localhost
-  ```
-* **Install via DEB package (Recommended):**
-  Download the latest debian release package and execute:
-  ```bash
-  sudo dpkg -i vulnsight-cli_2.0.1_amd64.deb
-  vulnsight-cli scan scanme.nmap.org
-  ```
+# Execute scan
+vulnsight-cli scan scanme.nmap.org
+```
 
 ---
 
 ### 🍏 macOS / Darwin (CLI & GUI Setup)
 
-#### 1. System Requirements & Prerequisites
-Ensure Homebrew package manager is installed, then run the dependency setup:
+#### Option A: Instant Production Launch (Recommended)
+Deploy instantly without source code compilation, NPM, or Go compilers:
 ```bash
-# Install Git, Go, and Node.js
-brew install git go node
-
-# Install and configure Ollama
+# 1. Install Ollama (using Homebrew or from ollama.com)
 brew install ollama
 ollama serve &
 ollama pull llama3:8b
-```
 
-#### 2. Repository Cloning & File Setup
+# 2. Download precompiled VulnSightAI Server
+curl -L -O https://github.com/pingsaketchoudhary/VulnSightAI/releases/download/v2.0.1/vulnsight-server-mac
+chmod +x vulnsight-server-mac
+
+# 3. Run unified server (GUI & API live on port 8080)
+./vulnsight-server-mac
+```
+*Access the cyber matrix board instantly at: `http://localhost:8080`*
+
+#### Option B: Build from Source (Developer Setup)
 ```bash
-# Clone the repository
+# 1. Install dependencies
+brew install git go node
+brew install ollama
+ollama serve &
+ollama pull llama3:8b
+
+# 2. Clone repository & compile static frontend
 git clone https://github.com/pingsaketchoudhary/VulnSightAI.git
 cd VulnSightAI
+cd frontend && npm install && npm run build
+cd ..
+
+# 3. Copy compiled frontend dist into Go embedded directory
+mkdir -p backend/cmd/vulnsight/dist
+cp -r frontend/out/* backend/cmd/vulnsight/dist/
+
+# 4. Compile and launch unified server
+cd backend
+go build -o vulnsight-server-mac cmd/vulnsight/main.go
+./vulnsight-server-mac
 ```
-
-#### 3. Launching the Web GUI (Manual Step)
-Run the backend and frontend in separate terminal windows:
-* **Terminal 1 (Go Backend):**
-  ```bash
-  cd backend
-  go run cmd/vulnsight/main.go
-  ```
-* **Terminal 2 (Next.js Frontend):**
-  ```bash
-  cd frontend
-  npm install
-  npm run dev
-  ```
-*Access the visual board at: `http://localhost:3000`*
-
-#### 4. Running the CLI Client
-* **Manual Compilation:**
-  ```bash
-  cd backend
-  go build -o build/vulnsight-cli-mac cmd/vulnsight-cli/main.go
-  ./build/vulnsight-cli-mac scan localhost
-  ```
 
 ---
 
 ### 🪟 Microsoft Windows (CLI & GUI Setup)
 
-#### 1. System Requirements & Prerequisites
-Ensure you download and install the official Windows installers for the following prerequisites:
-* **Git**: [git-scm.com/download/win](https://git-scm.com/download/win)
-* **Go**: [go.dev/dl/](https://go.dev/dl/)
-* **Node.js**: [nodejs.org/en/download/](https://nodejs.org/en/download/)
-* **Ollama**: Download the installer from [ollama.com/download/windows](https://ollama.com/download/windows). Once installed, run the following in PowerShell:
-  ```powershell
-  ollama pull llama3:8b
-  ```
+#### Option A: Instant Production Launch (Recommended)
+Deploy instantly without source code, NPM, or Go compilers:
+1. Download and run the **Ollama installer** from [ollama.com/download/windows](https://ollama.com/download/windows). Once active, pull the model in PowerShell:
+   ```powershell
+   ollama pull llama3:8b
+   ```
+2. Download `vulnsight-server.exe` from the [GitHub Releases](https://github.com/pingsaketchoudhary/VulnSightAI/releases/tag/v2.0.1) page.
+3. Open PowerShell and launch the server:
+   ```powershell
+   .\vulnsight-server.exe
+   ```
+*Access the cyber matrix board instantly at: `http://localhost:8080`*
 
-#### 2. Repository Cloning & File Setup
-Open PowerShell or Command Prompt:
-```powershell
-# Clone the repository
-git clone https://github.com/pingsaketchoudhary/VulnSightAI.git
-cd VulnSightAI
-```
+#### Option B: Build from Source (Developer Setup)
+1. Download and install standard tools:
+   * **Git**: [git-scm.com/download/win](https://git-scm.com/download/win)
+   * **Go**: [go.dev/dl/](https://go.dev/dl/)
+   * **Node.js**: [nodejs.org/en/download/](https://nodejs.org/en/download/)
+   * **Ollama**: [ollama.com/download/windows](https://ollama.com/download/windows)
+2. Open PowerShell and build the codebase:
+   ```powershell
+   # Clone & install frontend libraries
+   git clone https://github.com/pingsaketchoudhary/VulnSightAI.git
+   cd VulnSightAI
+   cd frontend
+   npm install
+   npm run build
+   cd ..
 
-#### 3. Launching the Web GUI (Manual Step)
-Launch services in separate terminal/PowerShell sessions:
-* **Session 1 (Go Backend):**
-  ```powershell
-  cd backend
-  go run cmd/vulnsight/main.go
-  ```
-* **Session 2 (Next.js Frontend):**
-  ```powershell
-  cd frontend
-  npm install
-  npm run dev
-  ```
-*Access the visual board at: `http://localhost:3000`*
+   # Compile React dist to Go embedded path
+   mkdir backend\cmd\vulnsight\dist
+   xcopy /E /I frontend\out\* backend\cmd\vulnsight\dist\
 
-#### 4. Running the CLI Client
-* **Manual Compilation:**
-  ```powershell
-  cd backend
-  go build -o build/vulnsight-cli.exe cmd/vulnsight-cli/main.go
-  .\build\vulnsight-cli.exe scan localhost
-  ```
-* **Direct Execution:**
-  Download `vulnsight-cli.exe` from the Releases tab and run:
-  ```powershell
-  .\vulnsight-cli.exe scan scanme.nmap.org
-  ```
+   # Build unified server binary
+   cd backend
+   go build -o vulnsight-server.exe cmd/vulnsight/main.go
+   .\vulnsight-server.exe
+   ```
 
 ---
 
